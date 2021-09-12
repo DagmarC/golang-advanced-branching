@@ -96,7 +96,12 @@ func readJSONFile() Values {
 		log.Fatal("File not found")
 	}
 
-	defer jsonFile.Close()
+	defer func(jsonFile *os.File) {
+		err := jsonFile.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(jsonFile)
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var content Values
